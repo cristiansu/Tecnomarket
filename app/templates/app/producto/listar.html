@@ -1,0 +1,70 @@
+{% extends 'app/base.html' %}
+
+{% block js %}
+    <script>
+        function eliminarProducto(id) {
+            Swal.fire({
+                'title':'¿Estás seguro?',
+                'text':'Esta acción no se puede revertir',
+                'icon':'question',
+                'showCancelButton':true,
+                'cancelButtonText':'No, cancelar',
+                'confirmButtonText':'Si, eliminar',
+                'confirmButtonColor':'red'
+
+            })
+            .then (function(result) {
+                if(result.isConfirmed) {
+                    window.location.href='/eliminar-productos/'+id+'/'
+                }
+            })
+        }
+    </script>
+{% endblock %}
+ 
+{% block contenido %}
+{% load humanize %}
+<br><br><br>
+<div class="card">
+    <div class="card-body">
+
+        <h2>Listado de Productos</h2>
+        <hr>
+        <table class="table table-striped table-hover table-responsive-sm">
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Marca</th>
+                <th>¿Es Nuevo?</th>
+                <th>Opciones</th>
+            </tr>
+            {% for p in productos %}
+            <tr>
+                <td>{{ p.nombre | title }}</td>
+                <td>${{ p.precio | intcomma }}</td>
+                <td>{{ p.marca | title }}</td>
+                <td>
+                    {% if p.nuevo %}
+                    Si
+                    {% else %}
+                    No
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'modificar_productos' p.id %}" class="btn btn-info btn-sm">Modificar</a>
+                    <a href="#" onclick='eliminarProducto({{ p.id }})' class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            
+            {% endfor %}
+        
+        
+        
+        </table>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
